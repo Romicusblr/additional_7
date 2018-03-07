@@ -7,21 +7,11 @@ module.exports = function solveSudoku(matrix) {
         [0, 0, 0]
     ];
 
-    let unSolvedArray = [] // elem = {col, row, suggestArray}
+    let unSolvedArray = [] // elem = {col, row}
 
     const bitpattern = (value) => {
         return 1 << (value - 1)
     };
-
-    const getValue = (bitmask) => { //get value from bitmask with only one 0 and return false if 0 is not alone
-        for (let i = 1; i <= 9; i++) {
-            let res = bitmask & bitpattern(i);
-            if (res === 0) {
-                return i;
-            }
-        }
-        return false;
-    }
 
     const IsMoveLegal = (row, col, value) => {
 
@@ -33,13 +23,8 @@ module.exports = function solveSudoku(matrix) {
     }
 
     const insertValue = (row, col, value) => {
-        if (IsMoveLegal(row, col, value)) {
             matrix[row][col] = value;
             updateMask(row, col, value);
-            return true;
-        } else {
-            return false;
-        }
     };
 
     const updateMask = (row, col, value) => {
@@ -69,18 +54,12 @@ module.exports = function solveSudoku(matrix) {
     }
 
     const createUnSolvedArray = (col, row) => {
-        let suggestArray = [];
-        for (let i = 1; i <= 9; i++) {
-            if (IsMoveLegal(row, col, i)) {
-                suggestArray.push(i);
-            };
-        };
         unSolvedArray.push({
             col: col,
-            row: row,
-            suggestArray: suggestArray
+            row: row
         })
     }
+
     // create bitmasks
     matrix.forEach((elem, row, array) => {
         return elem.forEach((elem, col) => {
@@ -99,51 +78,15 @@ module.exports = function solveSudoku(matrix) {
         })
     });
 
-
-
-    const solveSingle = (elem) => {
-        if (elem.suggestArray.length === 1) { //single detected
-            insertValue(elem.row, elem.col, elem.suggestArray[0]);
-            return true; // mark if solved succesfully
-        }
-    }
-
-
-    const returnAnswer = () => {
-        console.log(matrix, unSolvedArray)
-        return matrix;
-    }
-
-    // let prompt = 0;
-    let bool;
-    do {
-        bool = false;
-        unSolvedArray.forEach((elem, index, array) => {
-            if (solveSingle(elem)) {
-                array[index] = null;
-                bool = true;
-            };
-        });
-        //delete solved elements from array
-        let unsolvedArray2 = unSolvedArray.filter((elem) => {
-            return elem;
-        });
-        unSolvedArray = unsolvedArray2;
-        // prompt++;
-        if (!unSolvedArray.length) return returnAnswer();
-    } while (bool);
-    // return returnAnswer();
-
-
+    
     const goBack = (cell, i) => {
         matrix[cell.row][cell.col] = 0;
         undoMask(cell.row, cell.col, i);
     }
 
     const solveSudoku = (cell) => {
+        //if we got end of unSolvedArray - sudoku is solved
         if (start === length) {
-            debugger;
-            console.log(matrix);
             return matrix;
         };
         // get first legal number and make copy of mask and recursion
@@ -158,10 +101,10 @@ module.exports = function solveSudoku(matrix) {
             };
 
         };
-        return false;
+        return false;//trigger for backtracking
     }
 
-
+    // start to solve sudoku
     let length = unSolvedArray.length;
     let start = 0;
     let cell = unSolvedArray[start];
