@@ -110,37 +110,4 @@ module.exports = function solveSudoku(matrix) {
     let cell = unSolvedArray[start];
     return solveSudoku(cell);
 
-
-
-
-    // const solve = (matrix) => {
-    //     matrix.forEach((elem, row, array) => {
-    //         return elem.forEach((elem, col) => {
-    //             if (!elem || Array.isArray(elem)) {
-    //                 let suggestArray = array[row][col] = [];
-    //                 for (let i = 1; i <= 8; i++) {
-    //                     if (IsMoveLegal(row, col, i)) {
-    //                         suggestArray.push(i);
-    //                     };
-    //                 }
-    //             }
-    //         })
-
-    //     });
-    // }
-
-
-
-    // after creating masks create start array of suggests for each 0 cell
-
-    console.log(matrix);
-    // let counter;
-    // let cycleCounter = 0;
-    // do {
-    //     cycleCounter++;
-    //     counter = 0;
-    //     solve(matrix);
-    // } while (counter);
-    // console.log(cycleCounter, matrix);
-    // return matrix;
 }
